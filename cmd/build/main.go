@@ -12,7 +12,10 @@ import (
 	"github.com/vrischmann/envconfig"
 )
 
-const buildArgPrefix = "BUILD_ARG_"
+const (
+	buildArgPrefix          = "BUILD_ARG_"
+	buildkitSecretArgPrefix = "BUILDKIT_SECRET_"
+)
 
 func main() {
 	req := task.Request{
@@ -31,6 +34,18 @@ func main() {
 		req.Config.BuildArgs = append(
 			req.Config.BuildArgs,
 			strings.TrimPrefix(env, buildArgPrefix),
+		)
+	}
+
+	// carry over BUILDKIT_SECRET_* vars manually
+	for _, env := range os.Environ() {
+		if !strings.HasPrefix(env, buildkitSecretArgPrefix) {
+			continue
+		}
+
+		req.Config.BuildkitSecretArgs = append(
+			req.Config.BuildkitSecretArgs,
+			strings.TrimPrefix(env, buildkitSecretArgPrefix),
 		)
 	}
 

@@ -142,6 +142,18 @@ func (s *TaskSuite) TestBuildArgsStaticAndFile() {
 	s.NoError(err)
 }
 
+func (s *TaskSuite) TestBuildkitSecretArgs() {
+	s.req.Config.ContextDir = "testdata/buildkit-secret-args"
+	s.req.Config.BuildkitSecretArgs = []string{
+		"secret0=testdata/buildkit-secret-args/secret0",
+		"secret1=testdata/buildkit-secret-args/secret1",
+	}
+
+	// the Dockerfile itself asserts that secrets have been mounted
+	_, err := s.build()
+	s.NoError(err)
+}
+
 func (s *TaskSuite) TestUnpackRootfs() {
 	s.req.Config.ContextDir = "testdata/unpack-rootfs"
 	s.req.Config.UnpackRootfs = true

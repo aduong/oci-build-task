@@ -79,6 +79,18 @@ func Build(buildkitd *Buildkitd, outputsDir string, req Request) (Response, erro
 		)
 	}
 
+	for _, arg := range cfg.BuildkitSecretArgs {
+		pair := strings.SplitN(arg, "=", 2)
+		if len(pair) < 2 {
+			return Response{}, errors.Errorf(
+				"config: buildkit secret arg fewer than 2 parts: %s", arg,
+			)
+		}
+		buildctlArgs = append(buildctlArgs,
+			"--secret", "id="+pair[0]+",src="+pair[1],
+		)
+	}
+
 	logrus.WithFields(logrus.Fields{
 		"buildctl-args": buildctlArgs,
 	}).Debug("building")

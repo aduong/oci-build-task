@@ -69,6 +69,13 @@ Next, any of the following optional parameters may be specified:
   DO_THING=false
   ```
 
+* `$BUILDKIT_SECRET_*`: params prefixed with `BUILDKIT_SECRET_` will be used as
+  `buildkit` `--secret` args with the id set to the param name without the
+  prefix and the source set to the param value. For example, setting
+  `BUILDKIT_SECRET_aws=/root/.aws/credentials` results in passing `--secret
+  id=aws,src=/root/.aws/credentials` to `buildkit`. Read more about mounting
+  secrets for builds using [`--mount=type=secret`](https://github.com/moby/buildkit/blob/master/frontend/dockerfile/docs/experimental.md#run---mounttypesecret).
+
 * `$TARGET` (default empty): a target build stage to build.
 
 * `$TARGET_FILE` (default empty): path to a file containing the name of the
